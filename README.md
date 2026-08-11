@@ -165,7 +165,7 @@ Cuando el expediente ya tiene un dictamen final, como **Aprobado** o **Rechazado
 
 ---
 
-# 🔄 5. Flujo del expediente
+## 🔄 5. Flujo del expediente
 
 El proceso de revisión sigue el siguiente flujo:
 
@@ -199,8 +199,9 @@ El proceso de revisión sigue el siguiente flujo:
           │        NUEVAMENTE           │
           │              │              │
           └──────────────┴──────────────┘
+---
 
-# 📂 6. Estructura del proyecto 
+## 📂 6. Estructura del proyecto 
 
 sistema-practicas-mejorado/
 │
@@ -234,8 +235,9 @@ sistema-practicas-mejorado/
 │
 ├── MEJORAS_V2.md
 └── README.md
+---
 
-#🏗️ 7. Arquitectura del sistema
+##🏗️ 7. Arquitectura del sistema
 
 El sistema utiliza una arquitectura cliente-servidor:
 ┌──────────────────────────────┐
@@ -259,4 +261,5 @@ El sistema utiliza una arquitectura cliente-servidor:
 │            SQLite                     │
 │        Base de datos                  │
 └──────────────────────────────┘
-El backend también se encarga de la autenticación, autorización y gestión de documentos
+El backend también se encarga de la autenticación, autorización y gestión de documentos.
+---
