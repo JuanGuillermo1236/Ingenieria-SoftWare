@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - backend
+      - frontend
+      - db
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Verificar estructura del proyecto
+        run: |
+          echo "Verificando estructura del proyecto..."
+          test -d frontend
+          test -d backend
+          test -d database
+          echo "Estructura correcta."
