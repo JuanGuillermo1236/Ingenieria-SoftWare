@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de administración</title>
+<link rel="stylesheet" href="css/diseno.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-brand">
+      <span class="topbar-logo">EXP</span>
+      <span>Sistema de Prácticas · Admin</span>
+    </div>
+    <div class="topbar-derecha">
+      <span class="topbar-usuario">Hola, <strong id="usuario-nombre-topbar">...</strong></span>
+      <button class="topbar-salir" id="btn-salir">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <main class="contenedor contenedor-ancho">
+    <section class="cabecera-pagina">
+      <h1>Panel de administración</h1>
+      <p class="subtitulo">Gestiona usuarios y expedientes, y consulta el estado general del proceso de prácticas.</p>
+    </section>
+
+    <section class="metricas-grid" aria-label="Resumen de expedientes">
+      <article class="metrica-card">
+        <span class="metrica-etiqueta">Total expedientes</span>
+        <strong class="metrica-valor" id="metrica-total">0</strong>
+        <small>Registrados en el sistema</small>
+      </article>
+      <article class="metrica-card">
+        <span class="metrica-etiqueta">En revisión</span>
+        <strong class="metrica-valor" id="metrica-revision">0</strong>
+        <small>Entregados o en comisión</small>
+      </article>
+      <article class="metrica-card">
+        <span class="metrica-etiqueta">Observados</span>
+        <strong class="metrica-valor" id="metrica-observados">0</strong>
+        <small>Esperando subsanación</small>
+      </article>
+      <article class="metrica-card">
+        <span class="metrica-etiqueta">Aprobados</span>
+        <strong class="metrica-valor" id="metrica-aprobados">0</strong>
+        <small>Con dictamen favorable</small>
+      </article>
+      <article class="metrica-card">
+        <span class="metrica-etiqueta">Rechazados</span>
+        <strong class="metrica-valor" id="metrica-rechazados">0</strong>
+        <small>Con dictamen final negativo</small>
+      </article>
+      <article class="metrica-card">
+        <span class="metrica-etiqueta">Sin docente</span>
+        <strong class="metrica-valor" id="metrica-sin-docente">0</strong>
+        <small>Pendientes de asignación</small>
+      </article>
+    </section>
+
+    <div class="tabs">
+      <button class="tab-btn activo" data-tab="tab-expedientes">Reporte de expedientes</button>
+      <button class="tab-btn" data-tab="tab-usuarios">Usuarios</button>
+      <button class="tab-btn" data-tab="tab-nuevo-expediente">Nuevo expediente</button>
+      <button class="tab-btn" data-tab="tab-nuevo-usuario">Nuevo usuario</button>
+    </div>
+
+    <section class="tab-panel" id="tab-expedientes">
+      <section class="tarjeta">
+        <div class="tarjeta-cabecera-flex">
+          <div>
+            <h2 class="tarjeta-titulo">Reporte de expedientes</h2>
+            <p class="texto-ayuda">Busca por código, estudiante, tema o docente y filtra por estado.</p>
+          </div>
+          <div class="reporte-acciones">
+            <span class="chip chip-gris" id="contador-reporte">0 resultados</span>
+            <button class="boton boton-secundario" id="btn-exportar-csv" type="button">Exportar CSV</button>
+          </div>
+        </div>
+
+        <div class="filtros-grid">
+          <div class="campo-form campo-sin-margen">
+            <label for="filtro-busqueda">Buscar</label>
+            <input type="search" id="filtro-busqueda" placeholder="Código, estudiante, tema o docente">
+          </div>
+          <div class="campo-form campo-sin-margen">
+            <label for="filtro-estado">Estado</label>
+            <select id="filtro-estado">
+              <option value="">Todos los estados</option>
+              <option value="entregado">Entregado</option>
+              <option value="en_comision">En comisión</option>
+              <option value="observado">Observado</option>
+              <option value="aprobado">Aprobado</option>
+              <option value="rechazado">Rechazado</option>
+              <option value="sustentacion">Sustentación</option>
+            </select>
+          </div>
+          <div class="campo-form campo-sin-margen">
+            <label for="filtro-asignacion">Asignación</label>
+            <select id="filtro-asignacion">
+              <option value="">Todos</option>
+              <option value="asignado">Con docente</option>
+              <option value="sin_asignar">Sin docente</option>
+            </select>
+          </div>
+          <div class="filtro-acciones">
+            <button class="boton boton-texto" id="btn-limpiar-filtros" type="button">Limpiar filtros</button>
+          </div>
+        </div>
+
+        <div class="tabla-scroll">
+          <table class="tabla-expedientes">
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Estudiante</th>
+                <th>Tema</th>
+                <th>Docente</th>
+                <th>Estado</th>
+                <th>Plazo</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-expedientes-body">
+              <tr><td colspan="7" class="spinner-carga">Cargando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+
+    <section class="tab-panel oculto" id="tab-usuarios">
+      <section class="tarjeta">
+        <div class="tarjeta-cabecera-flex">
+          <div>
+            <h2 class="tarjeta-titulo">Usuarios registrados</h2>
+            <p class="texto-ayuda">El administrador puede crear estudiantes, docentes y otros administradores.</p>
+          </div>
+          <div class="resumen-usuarios">
+            <span class="chip chip-gris">Estudiantes: <strong id="total-estudiantes">0</strong></span>
+            <span class="chip chip-gris">Docentes: <strong id="total-docentes">0</strong></span>
+          </div>
+        </div>
+        <div class="tabla-scroll">
+          <table class="tabla-expedientes">
+            <thead>
+              <tr><th>Nombre</th><th>Correo</th><th>Rol</th><th>Registrado</th></tr>
+            </thead>
+            <tbody id="tabla-usuarios-body">
+              <tr><td colspan="4" class="spinner-carga">Cargando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+
+    <section class="tab-panel oculto" id="tab-nuevo-expediente">
+      <section class="tarjeta">
+        <h2 class="tarjeta-titulo">Registrar nuevo expediente</h2>
+        <p class="texto-ayuda">Si asignas un docente al crearlo, el expediente pasa directamente a “En comisión”.</p>
+        <form id="form-expediente">
+          <div class="form-grid">
+            <div class="campo-form">
+              <label for="exp-codigo">Código</label>
+              <input type="text" id="exp-codigo" placeholder="EXP-2026-0200" required>
+            </div>
+            <div class="campo-form">
+              <label for="exp-tema">Tema o título del proyecto</label>
+              <input type="text" id="exp-tema" placeholder="Tema del proyecto de prácticas" required>
+            </div>
+            <div class="campo-form">
+              <label for="exp-estudiante">Estudiante</label>
+              <select id="exp-estudiante" required></select>
+            </div>
+            <div class="campo-form">
+              <label for="exp-docente">Docente (opcional)</label>
+              <select id="exp-docente">
+                <option value="">Sin asignar todavía</option>
+              </select>
+            </div>
+            <div class="campo-form">
+              <label for="exp-fecha">Fecha de entrega</label>
+              <input type="date" id="exp-fecha" required>
+            </div>
+          </div>
+          <button type="submit" class="boton boton-primario" id="btn-crear-expediente">Crear expediente</button>
+        </form>
+      </section>
+    </section>
+
+    <section class="tab-panel oculto" id="tab-nuevo-usuario">
+      <section class="tarjeta">
+        <h2 class="tarjeta-titulo">Crear nuevo usuario</h2>
+        <form id="form-usuario">
+          <div class="form-grid">
+            <div class="campo-form">
+              <label for="user-nombre">Nombre completo</label>
+              <input type="text" id="user-nombre" required>
+            </div>
+            <div class="campo-form">
+              <label for="user-correo">Correo</label>
+              <input type="email" id="user-correo" required>
+            </div>
+            <div class="campo-form">
+              <label for="user-password">Contraseña temporal</label>
+              <input type="password" id="user-password" required minlength="6">
+            </div>
+            <div class="campo-form">
+              <label for="user-rol">Rol</label>
+              <select id="user-rol" required>
+                <option value="estudiante">Estudiante</option>
+                <option value="docente">Docente</option>
+                <option value="admin">Administrador</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="boton boton-primario" id="btn-crear-usuario">Crear usuario</button>
+        </form>
+      </section>
+    </section>
+  </main>
+
+  <div class="modal-fondo" id="modal-documentos">
+    <div class="modal-caja modal-caja-ancha">
+      <div class="modal-cabecera">
+        <h2>Detalle del expediente</h2>
+        <button class="modal-cerrar" id="cerrar-modal-documentos">✕</button>
+      </div>
+
+      <p class="modal-subtitulo">
+        Expediente <strong id="modal-doc-codigo">-</strong> · <span id="modal-doc-estudiante">-</span>
+      </p>
+
+      <div id="modal-admin-resumen" class="detalle-grid"></div>
+
+      <h3 class="seccion-subtitulo">Documentos</h3>
+      <ul class="lista-simple" id="modal-doc-lista">
+        <li>Cargando...</li>
+      </ul>
+
+      <h3 class="seccion-subtitulo">Últimos dictámenes</h3>
+      <div id="modal-admin-observaciones" class="historial-lista"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">
+    <span id="toast-texto">Listo</span>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/toast.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

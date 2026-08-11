@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Iniciar sesión - Sistema de Prácticas</title>
+<link rel="stylesheet" href="css/diseno.css">
+</head>
+<body>
+
+  <div class="pantalla-login">
+    <div class="login-caja">
+      <div class="login-logo">
+        <span class="topbar-logo">EXP</span>
+        <strong>Sistema de Prácticas</strong>
+      </div>
+
+      <h1>Inicia sesión</h1>
+      <p class="subtitulo">Ingresa con tu correo institucional para continuar.</p>
+
+      <div class="login-error" id="login-error"></div>
+
+      <form id="form-login">
+        <div class="campo-form">
+          <label for="correo">Correo</label>
+          <input type="email" id="correo" required placeholder="tucorreo@practicas.edu.pe" autocomplete="username">
+        </div>
+        <div class="campo-form">
+          <label for="password">Contraseña</label>
+          <input type="password" id="password" required placeholder="••••••••" autocomplete="current-password">
+        </div>
+        <button type="submit" class="boton boton-primario boton-ancho" id="btn-login">Ingresar</button>
+      </form>
+
+      <div class="login-credenciales">
+        <strong>Credenciales de prueba (creadas por el seed):</strong><br>
+        Admin: admin@practicas.edu.pe / admin123<br>
+        Docente: maria.lopez@practicas.edu.pe / docente123<br>
+        Estudiante: carla.ramos@alumno.edu.pe / estudiante123
+      </div>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>

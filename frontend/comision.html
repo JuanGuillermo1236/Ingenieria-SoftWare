@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bandeja del docente</title>
+<link rel="stylesheet" href="css/diseno.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-brand">
+      <span class="topbar-logo">EXP</span>
+      <span>Sistema de Prácticas · Docente</span>
+    </div>
+    <div class="topbar-derecha">
+      <span class="topbar-usuario">Hola, <strong id="usuario-nombre-topbar">...</strong></span>
+      <button class="topbar-salir" id="btn-salir">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <main class="contenedor contenedor-ancho">
+    <section class="cabecera-pagina">
+      <h1>Expedientes asignados</h1>
+      <p class="subtitulo">Revisa los documentos del estudiante y emite un dictamen con trazabilidad completa.</p>
+    </section>
+
+    <section class="metricas-grid metricas-docente" aria-label="Resumen docente">
+      <article class="metrica-card">
+        <span class="metrica-etiqueta">Asignados</span>
+        <strong class="metrica-valor" id="doc-total">0</strong>
+        <small>Total de expedientes</small>
+      </article>
+      <article class="metrica-card">
+        <span class="metrica-etiqueta">Por revisar</span>
+        <strong class="metrica-valor" id="doc-pendientes">0</strong>
+        <small>En comisión</small>
+      </article>
+      <article class="metrica-card">
+        <span class="metrica-etiqueta">Observados</span>
+        <strong class="metrica-valor" id="doc-observados">0</strong>
+        <small>Esperando subsanación</small>
+      </article>
+      <article class="metrica-card">
+        <span class="metrica-etiqueta">Aprobados</span>
+        <strong class="metrica-valor" id="doc-aprobados">0</strong>
+        <small>Dictamen favorable</small>
+      </article>
+      <article class="metrica-card">
+        <span class="metrica-etiqueta">Rechazados</span>
+        <strong class="metrica-valor" id="doc-rechazados">0</strong>
+        <small>Dictamen final negativo</small>
+      </article>
+      <article class="metrica-card">
+        <span class="metrica-etiqueta">Urgentes</span>
+        <strong class="metrica-valor" id="doc-urgentes">0</strong>
+        <small>≤ 1 día hábil</small>
+      </article>
+    </section>
+
+    <section class="tarjeta">
+      <div class="tarjeta-cabecera-flex">
+        <div>
+          <h2 class="tarjeta-titulo">Bandeja de revisión</h2>
+          <p class="texto-ayuda">Los expedientes próximos a vencer se resaltan automáticamente.</p>
+        </div>
+        <span class="chip chip-gris" id="doc-contador">0 resultados</span>
+      </div>
+
+      <div class="filtros-grid filtros-docente">
+        <div class="campo-form campo-sin-margen">
+          <label for="doc-busqueda">Buscar</label>
+          <input type="search" id="doc-busqueda" placeholder="Código, estudiante o tema">
+        </div>
+        <div class="campo-form campo-sin-margen">
+          <label for="doc-estado">Estado</label>
+          <select id="doc-estado">
+            <option value="">Todos los estados</option>
+            <option value="en_comision">En comisión</option>
+            <option value="observado">Observado</option>
+            <option value="aprobado">Aprobado</option>
+            <option value="rechazado">Rechazado</option>
+            <option value="entregado">Entregado</option>
+            <option value="sustentacion">Sustentación</option>
+          </select>
+        </div>
+        <div class="filtro-acciones">
+          <button class="boton boton-texto" id="doc-limpiar" type="button">Limpiar filtros</button>
+        </div>
+      </div>
+
+      <div class="tabla-scroll">
+        <table class="tabla-expedientes">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Estudiante</th>
+              <th>Tema</th>
+              <th>Plazo</th>
+              <th>Estado</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-body">
+            <tr><td colspan="6" class="spinner-carga">Cargando expedientes...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal de revisión integral -->
+  <div class="modal-fondo" id="modal-revision">
+    <div class="modal-caja modal-caja-grande">
+      <div class="modal-cabecera">
+        <div>
+          <h2>Revisión del expediente</h2>
+          <p class="modal-subtitulo modal-subtitulo-compacto">
+            <strong id="rev-codigo">-</strong> · <span id="rev-estudiante">-</span>
+          </p>
+        </div>
+        <button class="modal-cerrar" id="cerrar-revision">✕</button>
+      </div>
+
+      <div id="rev-resumen" class="detalle-grid detalle-revision"></div>
+
+      <div class="revision-grid">
+        <section>
+          <h3 class="seccion-subtitulo">Documentos entregados</h3>
+          <ul class="lista-simple lista-documentos" id="rev-documentos">
+            <li>Cargando...</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3 class="seccion-subtitulo">Historial de dictámenes</h3>
+          <div class="historial-lista" id="rev-observaciones">
+            <p class="texto-ayuda">Cargando...</p>
+          </div>
+        </section>
+      </div>
+
+      <section class="bloque-dictamen" id="bloque-dictamen">
+        <div class="bloque-dictamen-cabecera">
+          <div>
+            <h3 class="seccion-subtitulo">Emitir dictamen</h3>
+            <p class="texto-ayuda">Selecciona una decisión. Observar permite que el estudiante subsane; rechazar cierra la revisión.</p>
+          </div>
+        </div>
+
+        <div class="dictamen-opciones">
+          <label class="dictamen-opcion dictamen-aprobado">
+            <input type="radio" name="dictamen" value="aprobado" checked>
+            <span>
+              <strong>Aprobar</strong>
+              <small>Cumple con los requisitos.</small>
+            </span>
+          </label>
+          <label class="dictamen-opcion dictamen-observado">
+            <input type="radio" name="dictamen" value="observado">
+            <span>
+              <strong>Observar</strong>
+              <small>Debe corregir y volver a presentar.</small>
+            </span>
+          </label>
+          <label class="dictamen-opcion dictamen-rechazado">
+            <input type="radio" name="dictamen" value="rechazado">
+            <span>
+              <strong>Rechazar</strong>
+              <small>No corresponde continuar con este expediente.</small>
+            </span>
+          </label>
+        </div>
+
+        <div class="campo-condicional" id="campo-nota">
+          <label for="nota">Nota final (0 a 20)</label>
+          <input type="number" id="nota" min="0" max="20" step="0.1" placeholder="Ej. 17">
+        </div>
+
+        <div class="campo-condicional oculto" id="campo-detalle">
+          <label for="detalle-dictamen" id="label-detalle">Detalle de correcciones</label>
+          <textarea id="detalle-dictamen" rows="4" placeholder="Indica claramente qué debe corregir el estudiante..."></textarea>
+        </div>
+
+        <div class="modal-acciones">
+          <button class="boton boton-texto" id="cancelar-revision">Cancelar</button>
+          <button class="boton boton-primario" id="guardar-dictamen">Guardar dictamen</button>
+        </div>
+      </section>
+
+      <div class="estado-final-panel oculto" id="estado-final-panel"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">
+    <span id="toast-texto">Listo</span>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/toast.js"></script>
+  <script src="js/comision.js"></script>
+</body>
+</html>

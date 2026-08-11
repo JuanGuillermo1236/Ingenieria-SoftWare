@@ -1,16 +1,54 @@
-# Compiled class file
-*.class
+# =========================
+# Node.js
+# =========================
 
-# Log file
+node_modules/
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# =========================
+# Variables de entorno
+# =========================
+
+.env
+.env.*
+!.env.example
+
+# =========================
+# Base de datos local
+# =========================
+
+*.sqlite
+*.sqlite3
+*.db
+
+# =========================
+# Archivos temporales
+# =========================
+
 *.log
+tmp/
+temp/
 
-# BlueJ files
+# =========================
+# VS Code / Sistema operativo
+# =========================
+
+.vscode/
+.DS_Store
+Thumbs.db
+
+# =========================
+# Java (se puede conservar)
+# =========================
+
+*.class
 *.ctxt
-
-# Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-# Package Files #
 *.jar
 *.war
 *.nar
@@ -19,11 +57,5 @@
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
-
-# Environment variables
-.env
-.env.*
-!.env.example
