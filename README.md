@@ -11,16 +11,20 @@ supervisen el proceso.
 ## Tecnologías
 
 ### Frontend
+
 - React
 
 ### Backend
+
 - Node.js
 - Express
 
 ### Base de datos
+
 - MySQL
 
 ### Control de versiones
+
 - Git
 - GitHub
 
@@ -31,6 +35,10 @@ Ingenieria-SoftWare/
 ├── frontend/
 ├── backend/
 ├── database/
+├── .github/
+│   └── workflows/
+│       └── ci.yml
 ├── .gitignore
+├── .env.example
 ├── LICENSE
 └── README.md
