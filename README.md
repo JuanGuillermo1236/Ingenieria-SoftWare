@@ -1,265 +1,199 @@
-# 🎓 Sistema de Gestión de Prácticas Preprofesionales
+# Sistema de Revisión de Prácticas Profesionales
 
-Sistema web para la gestión, revisión y seguimiento de expedientes de prácticas preprofesionales.
+> **Versión mejorada V2.** Esta edición conserva el proyecto original y amplía el panel del administrador y el flujo de evaluación docente.
+> Incluye dashboard de expedientes, filtros de reporte, revisión integral de documentos, historial de dictámenes y la nueva decisión **Rechazado**.
 
-## 📋 Descripción
+Proyecto completo (backend + base de datos + frontend + login) para gestionar
+la revisión de expedientes de prácticas profesionales entre estudiantes,
+docentes (comisión evaluadora) y un administrador.
 
-El **Sistema de Gestión de Prácticas Preprofesionales** es una aplicación web desarrollada para digitalizar y centralizar el proceso de gestión de expedientes de los estudiantes.
-
-El sistema permite registrar expedientes, gestionar documentos, realizar revisiones, registrar observaciones, presentar subsanaciones y realizar el seguimiento del estado de cada expediente.
-
-La plataforma cuenta con tres tipos de usuarios:
-
-- 👨‍💼 Administrador
-- 👨‍🏫 Docente
-- 👨‍🎓 Estudiante
-
-Cada usuario dispone de funciones específicas de acuerdo con su rol.
+- **Backend:** Node.js + Express + Sequelize
+- **Base de datos:** SQLite (un solo archivo, no necesitas instalar nada aparte)
+- **Autenticación:** JWT + contraseñas encriptadas con bcrypt
+- **Frontend:** HTML + CSS + JavaScript puro (sin frameworks), consumiendo la API con `fetch`
+- **Roles:** estudiante, docente, administrador
 
 ---
 
-# 🎯 1. Problema que resuelve
+## 1. Requisitos
 
-La gestión de expedientes de prácticas preprofesionales puede involucrar múltiples documentos, revisiones, observaciones y correcciones.
+- [Node.js](https://nodejs.org/) versión 18 o superior (incluye `npm`)
+- [Visual Studio Code](https://code.visualstudio.com/) (o cualquier editor)
 
-Cuando este proceso se realiza de forma manual, pueden presentarse problemas como:
+Para comprobar que tienes Node instalado, abre una terminal y escribe:
 
-- Desorganización de documentos.
-- Dificultad para realizar seguimiento a los expedientes.
-- Pérdida de información relacionada con las revisiones.
-- Falta de trazabilidad de los cambios de estado.
-- Dificultad para controlar las observaciones y subsanaciones.
-- Retrasos en la comunicación entre estudiantes y docentes.
+```bash
+node --version
+```
 
-El sistema busca solucionar estos problemas centralizando la información y digitalizando el proceso de revisión y seguimiento.
+Si te muestra un número como `v18.x.x` o mayor, estás listo.
 
 ---
 
-# 🎯 2. Objetivo
+## 2. Abrir el proyecto en VS Code
 
-## Objetivo general
-
-Digitalizar y centralizar la gestión, revisión y seguimiento de expedientes de prácticas preprofesionales mediante una plataforma web.
-
-## Objetivos específicos
-
-- Gestionar usuarios según su rol.
-- Registrar y administrar expedientes.
-- Asignar docentes evaluadores.
-- Permitir la carga y descarga de documentos.
-- Facilitar la revisión de expedientes.
-- Registrar dictámenes y observaciones.
-- Permitir la presentación de subsanaciones.
-- Mantener un historial de los cambios de estado.
-- Facilitar la supervisión mediante un dashboard.
-- Generar reportes de expedientes.
+1. Descomprime el archivo `.zip` en cualquier carpeta.
+2. Abre VS Code.
+3. Ve a **Archivo → Abrir carpeta...** y selecciona la carpeta `sistema-practicas` (la que contiene `backend/`, `frontend/` y este README).
 
 ---
 
-# 🛠️ 3. Tecnologías utilizadas
+## 3. Instalar y configurar el backend
 
-|Tecnología 	 |	    Función
-| Node.js	 |  Entorno de ejecución del backend         |
-| Express	 |  Framework para el servidor y API REST    |
-| **JavaScript** |  Lenguaje utilizado en frontend y backend |
-| **HTML**       |  Estructura de las interfaces             | 
-| **CSS**        |  Diseño y estilos de la interfaz          |
-| **SQLite**     |  Base de datos del sistema                |
-| **Sequelize**  |  ORM para gestionar la base de datos      |
-| **JWT**        |  Autenticación de usuarios                |
-| **bcryptjs     |  Encriptación de contraseñas              |
-| **Multer**     |  Gestión de archivos subidos              |
-| **Nodemon**    |  Reinicio automático durante el desarrollo|
+Abre una terminal dentro de VS Code (**Terminal → Nueva Terminal**) y ejecuta:
 
----
+```bash
+cd backend
+npm install
+```
 
-# 👥 4. Roles del sistema
+Esto descarga todas las dependencias (puede tardar 1-2 minutos).
 
-El sistema cuenta con tres roles principales:
+Ahora crea tu archivo de variables de entorno copiando el ejemplo:
 
-- 👨‍💼 Administrador
-- 👨‍🏫 Docente
-- 👨‍🎓 Estudiante
+```bash
+# En Mac/Linux:
+cp .env.example .env
+
+# En Windows (PowerShell):
+copy .env.example .env
+```
+
+(También puedes hacerlo a mano: clic derecho en `.env.example` → Copiar → Pegar → renombrar a `.env`)
 
 ---
 
-## 👨‍💼 4.1 Administrador
+## 4. Crear la base de datos con datos de prueba
 
-El administrador tiene funciones de gestión y supervisión general.
+Este comando crea el archivo de base de datos (`backend/database/practicas.sqlite`)
+y lo llena con usuarios y expedientes de ejemplo:
 
-### Funciones principales
+```bash
+npm run seed
+```
 
-- Visualizar el dashboard.
-- Consultar métricas de expedientes.
-- Ver expedientes en revisión.
-- Consultar expedientes observados.
-- Consultar expedientes aprobados.
-- Consultar expedientes rechazados.
-- Identificar expedientes sin docente asignado.
-- Buscar y filtrar expedientes.
-- Crear usuarios.
-- Crear estudiantes.
-- Crear docentes.
-- Crear expedientes.
-- Asignar docentes evaluadores.
-- Consultar información de estudiantes y docentes.
-- Consultar documentos.
-- Consultar dictámenes anteriores.
-- Exportar reportes en formato CSV.
+Al terminar, la terminal te mostrará una lista de **correos y contraseñas de prueba** para cada rol. Guárdalos ahí mismo, o revisa la sección de credenciales más abajo.
+
+⚠️ Ejecutar `npm run seed` de nuevo **borra y vuelve a crear** toda la base de datos. Úsalo cuando quieras reiniciar todo desde cero.
 
 ---
 
-## 👨‍🏫 4.2 Docente
+## 5. Levantar el proyecto
 
-El docente tiene la responsabilidad de revisar y evaluar los expedientes que le fueron asignados.
+```bash
+npm start
+```
 
-### Funciones principales
+Deberías ver algo como:
 
-- Visualizar los expedientes asignados.
-- Consultar su carga de trabajo.
-- Filtrar expedientes.
-- Revisar documentos.
-- Descargar documentos.
-- Consultar el historial del expediente.
-- Aprobar expedientes.
-- Registrar una nota final.
-- Observar expedientes.
-- Registrar las correcciones solicitadas.
-- Rechazar expedientes.
-- Registrar el motivo del rechazo.
+```
+✅ Conexión a la base de datos establecida.
+✅ Modelos sincronizados con la base de datos.
+🚀 Servidor corriendo en http://localhost:4000
+   Frontend: http://localhost:4000/login.html
+   API:      http://localhost:4000/api
+```
 
-### Decisiones disponibles
+Abre tu navegador en **http://localhost:4000** (te redirige automáticamente al login).
 
-El docente puede tomar tres decisiones:
+Para desarrollo, también puedes usar `npm run dev`, que reinicia el servidor solo cada vez que guardas un cambio (usa `nodemon`).
 
-**Aprobar**
-- Requiere registrar una nota entre 0 y 20.
-
-**Observar**
-- Requiere indicar las correcciones que debe realizar el estudiante.
-- Permite posteriormente realizar una subsanación.
-
-**Rechazar**
-- Requiere registrar un motivo.
-- El expediente queda en un estado final.
+Para detener el servidor, vuelve a la terminal y presiona `Ctrl + C`.
 
 ---
 
-## 👨‍🎓 4.3 Estudiante
+## 6. Credenciales de prueba
 
-El estudiante utiliza el sistema para gestionar y realizar seguimiento de su expediente.
-
-### Funciones principales
-
-- Consultar su expediente.
-- Visualizar el tema o título del proyecto.
-- Consultar el estado actual.
-- Consultar el docente asignado.
-- Consultar el historial.
-- Revisar observaciones.
-- Subir documentos.
-- Descargar documentos.
-- Subir documentos de subsanación cuando corresponda.
-
-Cuando el expediente ya tiene un dictamen final, como **Aprobado** o **Rechazado**, el sistema restringe nuevas cargas de documentos.
+| Rol | Correo | Contraseña | Qué puede hacer |
+|---|---|---|---|
+| Administrador | `admin@practicas.edu.pe` | `admin123` | Dashboard, reporte de expedientes, crear usuarios/expedientes y asignar docentes |
+| Docente | `maria.lopez@practicas.edu.pe` | `docente123` | Revisar documentos e historial; aprobar, observar o rechazar |
+| Docente | `jorge.salinas@practicas.edu.pe` | `docente123` | Revisar documentos e historial; aprobar, observar o rechazar |
+| Estudiante | `carla.ramos@alumno.edu.pe` | `estudiante123` | Ver su expediente (viene **observado**, para probar la subida de subsanación) |
+| Estudiante | `jorge.huaman@alumno.edu.pe` | `estudiante123` | Ver su expediente (viene urgente, casi al límite del plazo) |
+| Estudiante | `rosa.quispe@alumno.edu.pe` | `estudiante123` | Ver su expediente |
+| Estudiante | `luis.fernandez@alumno.edu.pe` | `estudiante123` | Ver su expediente |
 
 ---
 
-## 🔄 5. Flujo del expediente
+## 7. Cómo probar el flujo completo
 
-El proceso de revisión sigue el siguiente flujo:
+1. Entra como **docente** (`maria.lopez@practicas.edu.pe`) → verás tu bandeja
+   con los expedientes asignados, ordenados por urgencia. Dale clic a
+   **"Revisar y dictaminar"** en uno que esté "En comisión", revisa sus documentos
+   y guarda un dictamen: **Aprobado** con nota, **Observado** con correcciones o
+   **Rechazado** con un motivo obligatorio.
+2. Cierra sesión y entra como el **estudiante** dueño de ese expediente →
+   verás la línea de tiempo actualizada con el nuevo estado. Si quedó
+   "Observado", podrás subir un documento de subsanación real (se guarda en
+   `backend/uploads/`), y el expediente vuelve automáticamente a "En comisión".
+3. Entra como **admin** (`admin@practicas.edu.pe`) → puedes crear un usuario
+   nuevo, registrar un expediente nuevo asignándolo a un estudiante, y asignar
+   un docente evaluador.
 
-```text
-                    ESTUDIANTE
-                         │
-                         ▼
-                Entrega documentos
-                         │
-                         ▼
-                   ENTREGADO
-                         │
-                         ▼
-                  EN COMISIÓN
-                         │
-                         ▼
-                  DOCENTE REVISA
-                         │
-          ┌──────────────┼──────────────┐
-          ▼              ▼              ▼
-      APROBADO       OBSERVADO      RECHAZADO
-          │              │              │
-          │              ▼              │
-          │       ESTUDIANTE CORRIGE    │
-          │              │              │
-          │              ▼              │
-          │       SUBE SUBSANACIÓN       │
-          │              │              │
-          │              ▼              │
-          │       DOCENTE REVISA        │
-          │        NUEVAMENTE           │
-          │              │              │
-          └──────────────┴──────────────┘
 ---
 
-## 📂 6. Estructura del proyecto 
+## 8. Estructura del proyecto
 
-sistema-practicas-mejorado/
-│
+```
+sistema-practicas/
 ├── backend/
 │   ├── src/
-│   │   ├── config/
-│   │   ├── controllers/
-│   │   ├── middleware/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   ├── utils/
-│   │   ├── seed.js
-│   │   └── server.js
-│   │
-│   ├── database/
-│   ├── uploads/
-│   ├── .env.example
+│   │   ├── server.js         → arranque del servidor
+│   │   ├── config/            → conexión a la base de datos
+│   │   ├── models/             → tablas: Usuario, Expediente, Observacion...
+│   │   ├── controllers/         → lógica de negocio
+│   │   ├── routes/               → definición de endpoints
+│   │   ├── middleware/            → autenticación JWT, roles, subida de archivos
+│   │   ├── utils/                  → cálculo de días hábiles, JWT
+│   │   └── seed.js                  → datos de prueba
+│   ├── database/                      → aquí se crea el archivo .sqlite (se genera solo)
+│   ├── uploads/                        → aquí se guardan los documentos subidos
 │   ├── package.json
-│   └── package-lock.json
-│
+│   └── .env.example
 ├── frontend/
 │   ├── login.html
 │   ├── estudiante.html
 │   ├── comision.html
 │   ├── admin.html
-│   ├── css/
+│   ├── css/diseno.css
 │   └── js/
-│
 ├── docs/
-│   └── ARQUITECTURA.md
-│
-├── MEJORAS_V2.md
-└── README.md
+│   └── ARQUITECTURA.md         → explicación técnica más a fondo + cómo escalarlo
+└── README.md                    → este archivo
+```
+
 ---
 
-##🏗️ 7. Arquitectura del sistema
+## 8.1. Mejoras incorporadas en esta versión
 
-El sistema utiliza una arquitectura cliente-servidor:
-┌──────────────────────────────┐
-│          FRONTEND                     │
-│      HTML / CSS / JS                  │
-└──────────────┬───────────────┘
-               │
-               │ HTTP / JSON
-               ▼
-┌──────────────────────────────┐
-│           BACKEND                     │
-│       Node.js + Express               │
-│                                       │
-│  Rutas → Controladores                │
-│        → Modelos                      │
-└──────────────┬───────────────┘
-               │
-               │ Sequelize
-               ▼
-┌──────────────────────────────┐
-│            SQLite                     │
-│        Base de datos                  │
-└──────────────────────────────┘
-El backend también se encarga de la autenticación, autorización y gestión de documentos.
+- **Administrador:** tarjetas con total de expedientes, en revisión, observados, aprobados, rechazados y sin docente; búsqueda y filtros en el reporte; exportación CSV; resumen de estudiantes/docentes; detalle de documentos y dictámenes.
+- **Docente:** dashboard de carga de trabajo; filtros; revisión integral por expediente; documentos e historial en una sola ventana; decisiones **Aprobar**, **Observar** y **Rechazar**.
+- **Estudiante:** visualización del tema, estado final aprobado/rechazado, historial de revisiones y bloqueo de nuevas cargas cuando el expediente ya tiene dictamen final.
+- **Trazabilidad:** la asignación de docente registra el cambio `entregado → en_comision` en el historial.
+
 ---
+
+## 9. Preguntas frecuentes
+
+**"Error: no se pudo conectar" al abrir el navegador**
+Asegúrate de que la terminal siga mostrando el mensaje `🚀 Servidor corriendo...`. Si la cerraste, corre `npm start` de nuevo dentro de `backend/`.
+
+**Al iniciar sesión aparece "Failed to execute 'json' on 'Response': Unexpected end of JSON input"**
+Esto pasa cuando el navegador le pide el login a un servidor que no es el backend, o cuando la conexión se corta a mitad de la respuesta. Dos causas típicas:
+1. Estás abriendo `login.html` con la extensión **Live Server** de VS Code (puerto 5500) u otro servidor estático, en vez de entrar por **http://localhost:4000/login.html**. El frontend y el backend deben verse desde el mismo puerto (el 4000), porque el propio backend sirve el frontend.
+2. Si usas `npm run dev` (nodemon), cada vez que se guardaba un archivo dentro de `backend/uploads` o `backend/database` (por ejemplo al subir un documento), nodemon reiniciaba el servidor completo y cortaba cualquier petición que estuviera en curso en ese momento — por eso fallaba de forma intermitente y no en un usuario fijo. Ya se agregó `backend/nodemon.json` para que solo reinicie el servidor cuando cambie código dentro de `backend/src`, y no por archivos subidos o por escrituras en la base de datos.
+
+Además, ahora el frontend (`api.js`) muestra un mensaje claro en vez del error críptico del navegador si esto vuelve a pasar.
+
+**Quiero ver los datos "crudos" de la base de datos**
+Instala la extensión de VS Code **"SQLite Viewer"** y abre el archivo `backend/database/practicas.sqlite` directamente.
+
+**Quiero borrar todo y empezar de cero**
+Corre `npm run seed` otra vez (backend). Esto recrea la base de datos completa.
+
+**¿Por qué SQLite y no MySQL/PostgreSQL?**
+Para que el proyecto corra sin instalar un servidor de base de datos aparte. El código usa Sequelize (un ORM), así que cambiar a PostgreSQL en el futuro es solo cuestión de cambiar la configuración — el resto del código no cambia. Ver `docs/ARQUITECTURA.md`.
+
+**¿Es seguro para producción tal cual está?**
+No — es un proyecto académico. En `docs/ARQUITECTURA.md` hay una lista de mejoras concretas para llevarlo a producción real (migraciones, refresh tokens, almacenamiento de archivos en la nube, etc.).
