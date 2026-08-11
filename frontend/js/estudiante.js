@@ -107,8 +107,8 @@ function renderizarPagina(expediente, usuario) {
           ? `<button class="boton boton-primario" id="btn-subsanacion">${
               estaObservado ? "Subir documento de subsanación" : "Subir documento"
             }</button>
-             <input type="file" id="input-subsanacion" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" hidden>
-             <p class="texto-ayuda" style="margin-top:10px;">Formatos permitidos: PDF, Word e imágenes. Máximo 10 MB.</p>`
+            <input type="file" id="input-subsanacion" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" hidden>
+            <p class="texto-ayuda" style="margin-top:10px;">Formatos permitidos: PDF, Word e imágenes. Máximo 10 MB.</p>`
           : `<p class="texto-ayuda">El expediente tiene un dictamen final y ya no admite nuevos documentos.</p>`
       }
     </section>
